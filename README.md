@@ -2,7 +2,7 @@
 
 This is the initial implementation :
 1.	Capturing the http://localhost:9090/api/node/groups request of user in PodController.java.
-2.	PodController calls the PodController.java, which reads the data from filesystem. NOTE: Having issue with http://localhost:8080/v1/api/pods in code ,so read from filesystem.
+2.	PodController calls the ProcessPodsInfo.java, which reads the data from filesystem. NOTE: Having issue with http://localhost:8080/v1/api/pods in code ,so read from filesystem.
 3.	Then further processed the RAW data with MapReduce.java and generated the following. 
     Output of MapReduce.java Intermediate data-> Node distribution with AppGroups 
     {n1=[a, b, c], n5=[a, b, c], n3=[d, e, f, g], n2=[d, e, g], n6=[d, e, f], n4=[f, g]}
