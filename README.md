@@ -49,6 +49,7 @@ Sample.txt         (In the Sample.txt the nos are ASCII values of the Apps. )
 AppGroup.txt     (Here in the below file  0 =>G1, which has a,b,c and 1=>G2, which has rest of the apps. )                              
 ---------                                     
 ---------                                         
+
 g,1
 b,0
 d,1
