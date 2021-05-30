@@ -53,6 +53,7 @@ f,1
 e,1 
 b,0 
 a,0
+
 v> Now facing little challenge in putting the contents of Sample.txt and AppGroup.txt to following:
 g1: { nodes: [n1, n5], app: [a, b, c] }, g2: { nodes: [ n2, n3, n4, n6 ], app: [d, e, f, g] } }
 
