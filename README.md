@@ -22,31 +22,52 @@ ii > Then called the K_Cluster.Java, where it takes the above node and ASCII val
     
 iii> K_Cluster genarates the following file with the Cluster mapping with Apps(AppGroup.txt) like following
 iv> At this stage I have two txt Files Sample.txt and AppGroup.txt. 
-Here in the below file  0 =>G1, which has a,b,c and 1=>G2, which has rest of the apps. 
+ 
+Sample.txt         (In the Sample.txt the nos are ASCII values of the Apps. )                 
+---------                                     
+---------                                         
+97,n1                                          
+98,n1                                           
+99,n1                                           
+97,n5                                           
+98,n5                                           
+99,n5                                           
+100,n3                                          
+101,n3                                          
+102,n3                                          
+103,n3                                          
+100,n2                                          
+101,n2                                          
+103,n2                                          
+100,n6                                          
+101,n6                                          
+102,n6                                          
+102,n4                                          
+103,n4     
 
-Sample.txt                                    AppGroup.txt
----------                                     ------------
----------                                     ------------      
-97,n1                                           g,1
-98,n1                                           b,0
-99,n1                                           d,1
-97,n5                                           f,1
-98,n5                                           c,0
-99,n5                                           d,1
-100,n3                                          e,1
-101,n3                                          c,0
-102,n3                                          a,0
-103,n3                                          e,1
-100,n2                                          g,1
-101,n2                                          d,1
-103,n2                                          f,1
-100,n6                                          g,1
-101,n6                                          f,1
-102,n6                                          e,1
-102,n4                                          b,0
-103,n4                                          a,0
+                                     
+AppGroup.txt     (Here in the below file  0 =>G1, which has a,b,c and 1=>G2, which has rest of the apps. )                              
+---------                                     
+---------                                         
+g,1
+b,0
+d,1
+f,1
+c,0
+d,1
+e,1
+c,0
+a,0
+e,1
+g,1
+d,1
+f,1
+g,1
+f,1
+e,1
+b,0
+a,0
 
-In the Sample.txt the nos are ASCII values of the Apps. 
 
 v> Now facing little challenge in putting the contents of Sample.txt and AppGroup.txt to following:
 g1: {
