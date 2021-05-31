@@ -54,6 +54,32 @@ e,1
 b,0 
 a,0
 
-v> Now facing little challenge in putting the contents of Sample.txt and AppGroup.txt to following:
-g1: { nodes: [n1, n5], app: [a, b, c] }, g2: { nodes: [ n2, n3, n4, n6 ], app: [d, e, f, g] } }
+v> Finally Output is returned to user as:
+{
+    "G0": {
+        "nodes": [
+            "n1",
+            "n5"
+        ],
+        "apps": [
+            "a",
+            "b",
+            "c"
+        ]
+    },
+    "G1": {
+        "nodes": [
+            "n2",
+            "n3",
+            "n4",
+            "n6"
+        ],
+        "apps": [
+            "d",
+            "e",
+            "f",
+            "g"
+        ]
+    }
+}
 
