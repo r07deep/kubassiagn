@@ -1,5 +1,6 @@
 package com.poc.kubassign.utils;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -105,7 +106,7 @@ public class ProcessPodsInfo {
 			} catch (Exception e) {
 			}
 		}
-
+		// Apply K-Means..
 		K_Cluster kCluster = new K_Cluster();
 		try {
 			clusterNAppFile = kCluster.getCluster(outputFilePath, lineCount, 2);
@@ -115,82 +116,100 @@ public class ProcessPodsInfo {
 		}
 
 		// Now read the appNode File and appClusterFile..
-		/*   
-		Map<String,Set<String>> finalNodes1=new HashMap<String, Set<String>>();
-		Map<String,Set<String>> finalApps1=new HashMap<String, Set<String>>();
-		Set<String> finalNode1=new HashSet<String>();
-		Set<String> appNode1=new HashSet<String>();
-		
-		Map<String, JSONObject> group1 = new HashMap<String, JSONObject>();
-		Map<String, JSONObject> group2 = new HashMap<String, JSONObject>();
-		JSONObject grpObject1 = new JSONObject();
-		JSONObject grpObject2 = new JSONObject();
+
 		JSONObject finalOutput = new JSONObject();
-		
-		Map<String,Set<String>> finalNodes2=new HashMap<String, Set<String>>();
-		Map<String,Set<String>> finalApps2=new HashMap<String, Set<String>>();
-		Set<String> finalNode2=new HashSet<String>();
-		Set<String> appNode2=new HashSet<String>();
-		
+		Map<String, Map<String, Set<String>>> appNodeCluster1 = new HashMap<String, Map<String, Set<String>>>();
+		Map<String, Map<String, Set<String>>> appNodeCluster2 = new HashMap<String, Map<String, Set<String>>>();
+		Set<String> apps1 = new HashSet<>();
+		Set<String> apps2 = new HashSet<>();
+		Set<String> nodes1 = new HashSet<>();
+		Set<String> nodes2 = new HashSet<>();
+		Map<String, Set<String>> appsObj1 = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> appsObj2 = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> nodeObj1 = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> nodeObj2 = new HashMap<String, Set<String>>();
+
+		addAppsToRespectiveCluster(clusterNAppFile, appNodeCluster1, appNodeCluster2, apps1, apps2, appsObj1, appsObj2);
+
+		formNodeObjects(nodeNAppDistribtionList, appNodeCluster1, nodes1, nodes2, nodeObj1, nodeObj2);
+
+		addNodesToClusters(appNodeCluster1, appNodeCluster2, nodes1, nodes2);
+
+		System.out.println("--APP and CLUSTER--");
+		System.out.println(appNodeCluster1);
+		System.out.println(appNodeCluster2);
+		finalOutput.putAll(appNodeCluster1);
+		finalOutput.putAll(appNodeCluster2);
+		return finalOutput;
+	}
+
+	/* function which adds apps node1 and app node2 to respective Clusters */
+	private void addAppsToRespectiveCluster(File clusterNAppFile, Map<String, Map<String, Set<String>>> appNodeCluster1,
+			Map<String, Map<String, Set<String>>> appNodeCluster2, Set<String> apps1, Set<String> apps2,
+			Map<String, Set<String>> appsObj1, Map<String, Set<String>> appsObj2) throws IOException {
+		String inputFileString = null;
 		BufferedReader reader1;
-		BufferedReader reader2;
-		ArrayList<String> rows = new ArrayList<String>();
+		String cluster1 = "0";
+		String cluster2 = "1";
 		try {
-			reader1 = new BufferedReader(new FileReader(file));
-			reader2 = new BufferedReader(new FileReader(clusterNAppFile));
-
-			String inputFileString = reader1.readLine();
-			String outputFileString = reader2.readLine();
-			while ((inputFileString != null) && (outputFileString != null)) {
-				ArrayList<String> ipTempList = new ArrayList<String>(Arrays.asList(inputFileString.split(",")));
-				ArrayList<String> opTempList = new ArrayList<String>(Arrays.asList(outputFileString.split(",")));
-				
-				
-				for (int j = 0; j <ipTempList.size();j++) {
-					String appStr=null;
-					String string = ipTempList.get(j);
-					System.out.println(string);
-					if(string.matches("[0-9]+")) {
-						char appChar = (char)Integer.parseInt(string);
-						appStr=Character.toString(appChar);
-					}
-					String appOPStr = opTempList.get(j);
-					if(appStr!=null && !(appOPStr.matches("[0-9]+"))) {
-					if(appStr.equals(appOPStr)) {
-						appNode1.add(appStr);
-						finalNode1.add(ipTempList.get(j+1));
-						grpObject1.put("nodes",finalNode1);
-						grpObject1.put("app",appNode1);
-						group1.put("G"+opTempList.get(j+1), grpObject1);
-					}
-					else {
-						appNode2.add(appStr);
-						finalNode2.add(ipTempList.get(j+1));
-						grpObject2.put("nodes",finalNode2);
-						grpObject2.put("app",appNode2);
-						group2.put("G"+opTempList.get(j+1), grpObject1);
-					}
-					}
+			reader1 = new BufferedReader(new FileReader(clusterNAppFile));
+			inputFileString = reader1.readLine();
+			while ((inputFileString != null)) {
+				String[] split = inputFileString.trim().split(",");
+				if (cluster1.equals(split[1])) {
+					apps1.add(split[0]);
+					appsObj1.put("apps", apps1);
+					appNodeCluster1.put("G" + cluster1, appsObj1);
+				} else {
+					apps2.add(split[0]);
+					appsObj2.put("apps", apps2);
+					appNodeCluster2.put("G" + cluster2, appsObj2);
 				}
-				
+				// read next line
+				inputFileString = reader1.readLine();
+
 			}
-
-			try {
-				reader1.close();
-				reader2.close();
-			} catch (IOException e) {
-
-				e.printStackTrace();
-			}
-
+			reader1.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		finalOutput.putAll(group1);
-		finalOutput.putAll(group2);
-		System.out.println(finalOutput);*/
+	}
 
-		return finalOutput;
+	/* function which forms the node1 and node2 Object */
+	private void formNodeObjects(LinkedHashMap<String, Set<String>> nodeNAppDistribtionList,
+			Map<String, Map<String, Set<String>>> appNCluster1, Set<String> nodes1, Set<String> nodes2,
+			Map<String, Set<String>> nodeObj1, Map<String, Set<String>> nodeObj2) {
+		for (Map.Entry<String, Set<String>> temp : nodeNAppDistribtionList.entrySet()) {
+			String key = temp.getKey();
+			String value = temp.getValue().toString();
+			for (Map.Entry<String, Map<String, Set<String>>> appGrp : appNCluster1.entrySet()) {
+				Map<String, Set<String>> appsMap = appGrp.getValue();
+				for (Map.Entry<String, Set<String>> appDataSet : appsMap.entrySet()) {
+					if (value.equals(appDataSet.getValue().toString())) {
+						nodes1.add(key);
+						nodeObj1.put("nodes", nodes1);
+					} else {
+						nodes2.add(key);
+						nodeObj2.put("nodes", nodes2);
+					}
+				}
+			}
+		}
+	}
+
+	/* function which adds nodes to Cluster */
+	private void addNodesToClusters(Map<String, Map<String, Set<String>>> appNCluster1,
+			Map<String, Map<String, Set<String>>> appNCluster2, Set<String> nodes1, Set<String> nodes2) {
+		for (Map.Entry<String, Map<String, Set<String>>> appGrp1 : appNCluster1.entrySet()) {
+			if (appGrp1.getKey().equals("G0")) {
+				appNCluster1.get("G0").put("nodes", nodes1);
+			}
+		}
+		for (Map.Entry<String, Map<String, Set<String>>> appGrp1 : appNCluster2.entrySet()) {
+			if (appGrp1.getKey().equals("G1")) {
+				appNCluster2.get("G1").put("nodes", nodes2);
+			}
+		}
 	}
 
 	/* function which returns the node and app distribution list */
